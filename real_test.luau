@@ -11,7 +11,7 @@ local SwordMounts = require(Shared.ReplicatedInstances.Swords.SwordMounts)
 local SwordCollection = Shared.SwordAPI.Collection
 local GetSword = Shared.ReplicatedInstances.Swords.GetSword
 
-local CurrentSword, CurrentAnimator, CurrentTrack
+local CurrentSword, CurrentTrack
 
 local function EquipSword(Character, SwordName)
 	local SwordData = GetSword:Invoke(SwordName)
@@ -35,11 +35,6 @@ local function EquipSword(Character, SwordName)
 		end
 	end
 
-	if CurrentTrack then
-		CurrentTrack:Stop()
-		CurrentTrack:Destroy()
-	end
-
 	if CurrentSword then CurrentSword:Destroy() end
 
 	Sword.Parent = Character
@@ -61,23 +56,21 @@ local function EquipSword(Character, SwordName)
 
 	CurrentSword = Sword
 
-	if not CurrentAnimator or CurrentAnimator.Parent ~= Humanoid then
-		CurrentAnimator = Instance.new("Animator")
-		CurrentAnimator.Parent = Humanoid
-	end
+	local AnimationController = Instance.new("AnimationController")
+	AnimationController.Parent = Sword
+
+	local Animator = Instance.new("Animator")
+	Animator.Parent = AnimationController
 
 	local AnimationFolder = SwordCollection:FindFirstChild(SwordData.AnimationType)
 	local IdleAnimation = AnimationFolder and AnimationFolder:FindFirstChild("Idle")
 
 	if IdleAnimation then
-		CurrentTrack = CurrentAnimator:LoadAnimation(IdleAnimation)
+		CurrentTrack = Animator:LoadAnimation(IdleAnimation)
 		CurrentTrack.Looped = true
-		CurrentTrack.Priority = Enum.AnimationPriority.Idle
 		CurrentTrack:Play()
 	end
 end
-
-warn('idle')
 
 getgenv().EquipClientSword = function(SwordName)
 	if Player.Character then
@@ -89,6 +82,4 @@ if Player.Character then
 	EquipSword(Player.Character, "Prince Blade")
 end
 
-for _, Connection in getconnections(ReplicatedStorage.FireSwordInfo.OnClientEvent) do
-    Connection:Disable()
-end
+--
