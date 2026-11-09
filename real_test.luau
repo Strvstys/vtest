@@ -72,10 +72,12 @@ local function EquipSword(Character, SwordName)
 	if IdleAnimation then
 		CurrentTrack = CurrentAnimator:LoadAnimation(IdleAnimation)
 		CurrentTrack.Looped = true
-		CurrentTrack.Priority = Enum.AnimationPriority.Action
+		CurrentTrack.Priority = Enum.AnimationPriority.Idle
 		CurrentTrack:Play()
 	end
 end
+
+warn('idle')
 
 getgenv().EquipClientSword = function(SwordName)
 	if Player.Character then
