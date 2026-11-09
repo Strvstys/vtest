@@ -2,6 +2,10 @@
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
+for _, Connection in getconnections(ReplicatedStorage.FireSwordInfo.OnClientEvent) do
+    Connection:Disable()
+end
+
 local Player = Players.LocalPlayer
 local Shared = ReplicatedStorage.Shared
 
@@ -81,5 +85,3 @@ end
 if Player.Character then
 	EquipSword(Player.Character, "Prince Blade")
 end
-
---
